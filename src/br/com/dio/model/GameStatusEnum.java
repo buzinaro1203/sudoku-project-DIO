@@ -1,7 +1,7 @@
 package br.com.dio.model;
 
 public enum GameStatusEnum {
-  NOW_STARTED,
+  NON_STARTED,
   INCOMPLETE,
   COMPLETE
 }
