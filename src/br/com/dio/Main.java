@@ -2,14 +2,17 @@ package br.com.dio;
 
 import br.com.dio.model.Board;
 import br.com.dio.model.Space;
+import br.com.dio.util.BoardTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static br.com.dio.util.BoardTemplate.BOARD_TEMPLATE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -72,21 +75,68 @@ public class Main {
     System.out.println("O está pronta para iniciar");
   }
 
-  private static void finishGame() {
-  }
-
-  private static void clearGame() {
+  private static void showCurrentGame() {
+    if (isNull(board)) {
+      System.out.println("O jogo não foi iniciado ainda");
+      return;
+    }
+    var args = new Object[81];
+    var argsPos = 0;
+    for (int i = 0; i < BOARD_LIMIT; i++) {
+      for (var col1 : board.getSpaces()) {
+        args[argsPos++] = " " + (isNull(col1.get(i).getActual()) ? " " : col1.get(i).getActual());
+      }
+    }
+    System.out.println("Seu jogo se encontra da seguinte forma");
+    System.out.printf((BOARD_TEMPLATE) + "%n", args);
   }
 
   private static void showGameStatus() {
+    if (isNull(board)) {
+      System.out.println("O jogo não foi iniciado ainda");
+      return;
+    }
+    System.out.printf("O jogo se encontra no status %s \n", board.getStatus().getLabel());
+    if (board.hasErrors()) {
+      System.out.println("O jogo contém erros");
+    } else {
+      System.out.println("O jogo não possui erros");
+    }
   }
 
-  private static void showCurrentGame() {
+  private static void clearGame() {
+    if (isNull(board)) {
+      System.out.println("O jogo não foi iniciado ainda");
+      return;
+    }
+    System.out.println("Tem certeza que deseja limpar o jogo e perder tood o seu progresso?(y/n)");
+    var confirm = s.next();
+    while (!confirm.equalsIgnoreCase("y") && !confirm.equalsIgnoreCase("n")) {
+      System.out.println("Digite \"y\" ou \"n\"");
+      confirm = s.next();
+    }
+    if (confirm.equalsIgnoreCase("y")) {
+      board.reset();
+    }
+  }
+
+  private static void finishGame() {
+    if (isNull(board)) {
+      System.out.println("O jogo não foi iniciado ainda");
+      return;
+    }
+    if (board.gameIsFinished()) {
+      System.out.println("Parabéns jogo finalizado");
+      showCurrentGame();
+      board = null;
+    } else if (board.hasErrors()) {
+      System.out.println("Seu jogo consta erros verifique seu board e ajuste-o");
+    }
   }
 
   private static void removeNumber() {
     if (isNull(board)) {
-      System.out.println("Ojogo ainda não foi iniciado");
+      System.out.println("O jogo ainda não foi iniciado");
       return;
     }
     System.out.println("Informe a coluna em que o numero sera inserido");
