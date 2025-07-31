@@ -2,16 +2,15 @@ package br.com.dio;
 
 import br.com.dio.model.Board;
 import br.com.dio.model.Space;
-import br.com.dio.util.BoardTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static br.com.dio.service.BoardService.BOARD_LIMIT;
 import static br.com.dio.util.BoardTemplate.BOARD_TEMPLATE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -19,8 +18,6 @@ import static java.util.Objects.nonNull;
 public class Main {
   private final static Scanner s = new Scanner(System.in);
   private static Board board;
-  private final static int BOARD_LIMIT = 9;
-
   public static void main(String[] args) {
     final var positions = Stream.of(args).collect(Collectors.toMap(
         k -> k.split(";")[0],
